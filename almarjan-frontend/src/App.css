@@ -1717,3 +1717,11 @@ a {
     font-size: 38px;
   }
 }
+
+.single-work-image {
+  grid-template-columns: 1fr !important;
+}
+
+.single-work-image .ba-box {
+  min-height: 360px;
+}

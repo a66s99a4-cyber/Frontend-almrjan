@@ -1,9 +1,6 @@
-import kitchenBefore from "../assets/kitchen-before.jpg"
-import kitchenAfter from "../assets/kitchen-after.jpg"
-import apartmentBefore from "../assets/apartment-before.jpg"
-import apartmentAfter from "../assets/apartment-after.jpg"
-import houseBefore from "../assets/house-before.jpg"
-import houseAfter from "../assets/house-after.jpg"
+import kitchen from "../assets/kitchen.jpg"
+import apartment from "../assets/apartment.jpg"
+import house from "../assets/house.jpg"
 
 const OurWork = ({ lang }) => {
   return (
@@ -16,68 +13,65 @@ const OurWork = ({ lang }) => {
 
           <h1>
             {lang === "ar"
-              ? "قبل وبعد بطريقة أوضح واحترافية"
-              : "Professional Before & After Results"}
+              ? "نتائج تنظيف حقيقية وواضحة"
+              : "Real Cleaning Results"}
           </h1>
 
           <p>
             {lang === "ar"
-              ? "صور حقيقية توضح الفرق في المطابخ والشقق والبيوت"
-              : "Real results for kitchens, apartments, and houses"}
+              ? "شوف نتائج أعمالنا في المطابخ والشقق والبيوت"
+              : "See our cleaning results for kitchens, apartments, and houses"}
           </p>
         </div>
       </section>
 
       <section className="before-after-section">
-        <h2>{lang === "ar" ? "قبل وبعد" : "Before & After"}</h2>
+        <h2>{lang === "ar" ? "أعمالنا" : "Our Work"}</h2>
 
         <div className="before-after-grid">
           <div className="before-after-card">
-            <div className="ba-row">
+            <div className="ba-row single-work-image">
               <div className="ba-box">
-                <span className="tag before">{lang === "ar" ? "قبل" : "Before"}</span>
-                <img src={kitchenBefore} alt="Kitchen before cleaning" />
-              </div>
-
-              <div className="ba-box">
-                <span className="tag after">{lang === "ar" ? "بعد" : "After"}</span>
-                <img src={kitchenAfter} alt="Kitchen after cleaning" />
+                <span className="tag after">
+                  {lang === "ar" ? "تنظيف مطبخ" : "Kitchen Cleaning"}
+                </span>
+                <img src={kitchen} alt="Kitchen cleaning" />
               </div>
             </div>
 
-            <p className="ba-title">{lang === "ar" ? "تنظيف مطبخ" : "Kitchen Cleaning"}</p>
+            <p className="ba-title">
+              {lang === "ar" ? "تنظيف مطبخ" : "Kitchen Cleaning"}
+            </p>
           </div>
 
           <div className="before-after-card">
-            <div className="ba-row">
+            <div className="ba-row single-work-image">
               <div className="ba-box">
-                <span className="tag before">{lang === "ar" ? "قبل" : "Before"}</span>
-                <img src={apartmentBefore} alt="Apartment before cleaning" />
-              </div>
-
-              <div className="ba-box">
-                <span className="tag after">{lang === "ar" ? "بعد" : "After"}</span>
-                <img src={apartmentAfter} alt="Apartment after cleaning" />
+                <span className="tag after">
+                  {lang === "ar" ? "تنظيف شقة" : "Apartment Cleaning"}
+                </span>
+                <img src={apartment} alt="Apartment cleaning" />
               </div>
             </div>
 
-            <p className="ba-title">{lang === "ar" ? "تنظيف شقة" : "Apartment Cleaning"}</p>
+            <p className="ba-title">
+              {lang === "ar" ? "تنظيف شقة" : "Apartment Cleaning"}
+            </p>
           </div>
 
           <div className="before-after-card">
-            <div className="ba-row">
+            <div className="ba-row single-work-image">
               <div className="ba-box">
-                <span className="tag before">{lang === "ar" ? "قبل" : "Before"}</span>
-                <img src={houseBefore} alt="House before cleaning" />
-              </div>
-
-              <div className="ba-box">
-                <span className="tag after">{lang === "ar" ? "بعد" : "After"}</span>
-                <img src={houseAfter} alt="House after cleaning" />
+                <span className="tag after">
+                  {lang === "ar" ? "تنظيف منزل" : "House Cleaning"}
+                </span>
+                <img src={house} alt="House cleaning" />
               </div>
             </div>
 
-            <p className="ba-title">{lang === "ar" ? "تنظيف منزل" : "House Cleaning"}</p>
+            <p className="ba-title">
+              {lang === "ar" ? "تنظيف منزل" : "House Cleaning"}
+            </p>
           </div>
         </div>
       </section>
