@@ -20,8 +20,13 @@ const Navbar = ({ user, setUser, lang, setLang }) => {
 
       <div className="nav-links">
         <Link to="/">{lang === "ar" ? "الرئيسية" : "Home"}</Link>
-        <Link to="/basic-cleaning">{lang === "ar" ? "تنظيف عادي" : "Basic"}</Link>
-        <Link to="/professional-cleaning">{lang === "ar" ? "تنظيف احترافي" : "Professional"}</Link>
+        <Link to="/pricing" className="nav-highlight">
+          {lang === "ar" ? "حاسبة السعر" : "Price Calculator"}
+        </Link>
+        <Link to="/booking">{lang === "ar" ? "احجز الآن" : "Book Now"}</Link>
+        <Link to="/professional-cleaning">
+          {lang === "ar" ? "تنظيف احترافي" : "Professional"}
+        </Link>
         <Link to="/our-work">{lang === "ar" ? "أعمالنا" : "Our Work"}</Link>
 
         {user?.role === "admin" && (
@@ -32,17 +37,14 @@ const Navbar = ({ user, setUser, lang, setLang }) => {
           {lang === "ar" ? "EN" : "AR"}
         </button>
 
-        {!user ? (
-          <>
-            <Link to="/login">{lang === "ar" ? "دخول" : "Login"}</Link>
-            <Link to="/register" className="nav-btn">
-              {lang === "ar" ? "تسجيل" : "Register"}
-            </Link>
-          </>
-        ) : (
+        {user?.role === "admin" ? (
           <button className="nav-btn" onClick={logout}>
             {lang === "ar" ? "خروج" : "Logout"}
           </button>
+        ) : (
+          <Link to="/login" className="admin-login-link">
+            {lang === "ar" ? "دخول الأدمن" : "Admin Login"}
+          </Link>
         )}
       </div>
     </nav>

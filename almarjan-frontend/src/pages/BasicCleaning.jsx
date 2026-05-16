@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom"
 import Pricing from "./Pricing"
 
-const BasicCleaning = ({ user, lang }) => {
+const BasicCleaning = ({ lang }) => {
   return (
     <main dir={lang === "ar" ? "rtl" : "ltr"}>
       <section className="service-hero basic-service-hero">
@@ -10,26 +10,36 @@ const BasicCleaning = ({ user, lang }) => {
 
           <h1>
             {lang === "ar"
-              ? "أسعار واضحة قبل الحجز"
-              : "Clear Prices Before Booking"}
+              ? "احسب السعر واحجز بدون تسجيل دخول"
+              : "Calculate the price and book without login"}
           </h1>
 
           <p>
             {lang === "ar"
-              ? "اختر المنطقة ونوع المكان، وشاهد السعر مباشرة قبل ما تحجز."
-              : "Choose your area and place type, then see the price before booking."}
+              ? "اختار المنطقة ونوع المكان وعدد الغرف وشوف السعر مباشرة."
+              : "Choose area, place type, rooms, and see the price instantly."}
           </p>
 
-          <Link to={user ? "/booking" : "/login"} className="main-btn">
-            {lang === "ar" ? "احجز تنظيف عادي" : "Book Basic Cleaning"}
-          </Link>
+          <div className="hero-buttons">
+            <Link to="/pricing">
+              {lang === "ar" ? "احسب السعر" : "Calculate Price"}
+            </Link>
+
+            <Link to="/booking">
+              {lang === "ar" ? "احجز الآن" : "Book Now"}
+            </Link>
+          </div>
         </div>
       </section>
 
       <section className="service-details">
         <div className="section-heading">
           <span>{lang === "ar" ? "حاسبة الأسعار" : "Price Calculator"}</span>
-          <h2>{lang === "ar" ? "احسب سعر التنظيف العادي" : "Calculate Basic Cleaning Price"}</h2>
+          <h2>
+            {lang === "ar"
+              ? "أهم خيار في الموقع صار واضح للزبون"
+              : "The main website option is now clear"}
+          </h2>
         </div>
 
         <Pricing lang={lang} />

@@ -12,14 +12,19 @@ const Admin = ({ user }) => {
     bookingsCount: 0,
     completedBookings: 0,
     paidBookingsCount: 0,
-    income: 0
+    income: 0,
+    totalCost: 0,
+    netProfit: 0
   })
 
   const [priceForm, setPriceForm] = useState({
     area: "",
     propertyType: "",
     cleaningType: "Basic",
-    price: ""
+    price: "",
+    cost: "",
+    roomPrice: "",
+    tankCleaningPrice: ""
   })
 
   const token = localStorage.getItem("token")
@@ -109,18 +114,25 @@ const Admin = ({ user }) => {
   const addPrice = async (e) => {
     e.preventDefault()
 
-    await axios.post(`${API}/prices`, priceForm, {
-      headers: { Authorization: `Bearer ${token}` }
-    })
+    try {
+      await axios.post(`${API}/prices`, priceForm, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
 
-    setPriceForm({
-      area: "",
-      propertyType: "",
-      cleaningType: "Basic",
-      price: ""
-    })
+      setPriceForm({
+        area: "",
+        propertyType: "",
+        cleaningType: "Basic",
+        price: "",
+        cost: "",
+        roomPrice: "",
+        tankCleaningPrice: ""
+      })
 
-    refreshAdmin()
+      refreshAdmin()
+    } catch (error) {
+      alert(error.response?.data?.message || "Error adding price")
+    }
   }
 
   const deletePrice = async (id) => {
@@ -147,45 +159,42 @@ const Admin = ({ user }) => {
   }
 
   return (
-    <section className="section">
+    <section className="section admin-page">
       <h2>Admin Dashboard</h2>
 
       <div className="admin-section">
         <h3>Website Statistics</h3>
 
         <div className="admin-list">
-          <div className="admin-card">
+          <div className="admin-card stat-card">
             <h3>{stats.visitorsCount}</h3>
             <p>Website Visits</p>
           </div>
 
-          <div className="admin-card">
-            <h3>{stats.usersCount}</h3>
-            <p>Total Users</p>
-          </div>
-
-          <div className="admin-card">
+          <div className="admin-card stat-card">
             <h3>{stats.bookingsCount}</h3>
             <p>Total Bookings</p>
           </div>
 
-          <div className="admin-card">
+          <div className="admin-card stat-card">
             <h3>{stats.completedBookings}</h3>
             <p>Completed Bookings</p>
           </div>
 
-          <div className="admin-card">
-            <h3>{stats.paidBookingsCount}</h3>
-            <p>Paid Bookings</p>
-          </div>
-
-          <div className="admin-card">
+          <div className="admin-card stat-card">
             <h3>{stats.income} BHD</h3>
             <p>Total Income</p>
+          </div>
 
-            <button onClick={resetIncome}>
-              Reset Income
-            </button>
+          <div className="admin-card stat-card danger-stat">
+            <h3>{stats.totalCost} BHD</h3>
+            <p>Total Cost</p>
+          </div>
+
+          <div className="admin-card stat-card profit-stat">
+            <h3>{stats.netProfit} BHD</h3>
+            <p>Net Profit</p>
+            <button onClick={resetIncome}>Reset Income</button>
           </div>
         </div>
       </div>
@@ -193,7 +202,7 @@ const Admin = ({ user }) => {
       <div className="admin-section">
         <h3>Add Basic Price</h3>
 
-        <form className="form-box" onSubmit={addPrice}>
+        <form className="form-box admin-price-form" onSubmit={addPrice}>
           <input
             name="area"
             placeholder="Area مثل Saar أو سار"
@@ -213,21 +222,42 @@ const Admin = ({ user }) => {
             <option value="House">House</option>
             <option value="Kitchen">Kitchen</option>
             <option value="Office">Office</option>
+            <option value="Villa">Villa</option>
           </select>
 
-          <input
-            name="cleaningType"
-            value="Basic"
-            readOnly
-          />
+          <input name="cleaningType" value="Basic" readOnly />
 
           <input
             name="price"
             type="number"
-            placeholder="Price BHD"
+            placeholder="Base Price BHD"
             value={priceForm.price}
             onChange={handlePriceChange}
             required
+          />
+
+          <input
+            name="cost"
+            type="number"
+            placeholder="Company Cost BHD"
+            value={priceForm.cost}
+            onChange={handlePriceChange}
+          />
+
+          <input
+            name="roomPrice"
+            type="number"
+            placeholder="Extra Price Per Room BHD"
+            value={priceForm.roomPrice}
+            onChange={handlePriceChange}
+          />
+
+          <input
+            name="tankCleaningPrice"
+            type="number"
+            placeholder="Tank Cleaning Price BHD"
+            value={priceForm.tankCleaningPrice}
+            onChange={handlePriceChange}
           />
 
           <button>Add Price</button>
@@ -243,7 +273,10 @@ const Admin = ({ user }) => {
               <h3>{item.area}</h3>
               <p>Place: {item.propertyType}</p>
               <p>Cleaning: {item.cleaningType}</p>
-              <p>Price: {item.price} BHD</p>
+              <p>Base Price: {item.price} BHD</p>
+              <p>Cost: {item.cost || 0} BHD</p>
+              <p>Room Price: {item.roomPrice || 0} BHD</p>
+              <p>Tank Cleaning: {item.tankCleaningPrice || 0} BHD</p>
 
               <button onClick={() => deletePrice(item._id)}>
                 Delete Price
@@ -258,11 +291,15 @@ const Admin = ({ user }) => {
 
         <div className="admin-list">
           {bookings.map((booking) => (
-            <div className="admin-card" key={booking._id}>
+            <div className="admin-card booking-admin-card" key={booking._id}>
               <h3>{booking.customerName}</h3>
 
               <p>Phone: {booking.phone}</p>
-              <p>Area: {booking.area}</p>
+              <p>Area: {booking.areaName || booking.area}</p>
+              <p>Place: {booking.propertyType}</p>
+              <p>Cleaning: {booking.cleaningType}</p>
+              <p>Rooms: {booking.rooms || 0}</p>
+              <p>Tank Cleaning: {booking.tankCleaning ? "Yes" : "No"}</p>
               <p>House Number: {booking.houseNumber || "No house number"}</p>
 
               <p>
@@ -276,8 +313,13 @@ const Admin = ({ user }) => {
                 )}
               </p>
 
-              <p>Payment Method: {booking.paymentMethod || "Not selected"}</p>
+              <p>Date: {booking.date}</p>
+              <p>Price: {booking.price || 0} BHD</p>
+              <p>Cost: {booking.cost || 0} BHD</p>
+              <p>Profit: {booking.profit || 0} BHD</p>
               <p>Payment Status: {booking.paymentStatus || "pending"}</p>
+              <p>Status: {booking.status}</p>
+              <p>Notes: {booking.notes || "No notes"}</p>
 
               {booking.paymentStatus === "paid" ? (
                 <button onClick={() => markAsPending(booking._id)}>
@@ -288,14 +330,6 @@ const Admin = ({ user }) => {
                   Confirm Paid
                 </button>
               )}
-
-              <p>Place: {booking.propertyType}</p>
-              <p>Cleaning: {booking.cleaningType}</p>
-              <p>Date: {booking.date}</p>
-              <p>Time: {booking.time}</p>
-              <p>Price: {booking.price || 0} BHD</p>
-              <p>Status: {booking.status}</p>
-              <p>Booking ID: {booking._id}</p>
 
               <select
                 value={booking.status}

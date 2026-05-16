@@ -1,11 +1,12 @@
 import { useState } from "react"
 import axios from "axios"
-import { Link } from "react-router-dom"
 
 const API = "https://almarjan-backend-rt2o.onrender.com"
 
-const ProfessionalCleaning = ({ user, lang }) => {
+const ProfessionalCleaning = ({ lang }) => {
   const [form, setForm] = useState({
+    customerName: "",
+    phone: "",
     area: "Inspection",
     propertyType: "Inspection",
     cleaningType: "Professional",
@@ -13,26 +14,12 @@ const ProfessionalCleaning = ({ user, lang }) => {
     areaName: "",
     houseNumber: "",
     date: "",
-    time: "",
     notes: "",
     paymentMethod: "whatsapp"
   })
 
   const [createdBooking, setCreatedBooking] = useState(null)
   const [error, setError] = useState("")
-
-  if (!user) {
-    return (
-      <section className="professional-page" dir={lang === "ar" ? "rtl" : "ltr"}>
-        <div className="professional-login-box">
-          <h2>{lang === "ar" ? "سجل دخول عشان تحجز معاينة" : "Sign in to book inspection"}</h2>
-          <Link to="/login" className="main-btn">
-            {lang === "ar" ? "تسجيل الدخول" : "Sign In"}
-          </Link>
-        </div>
-      </section>
-    )
-  }
 
   const handleChange = (e) => {
     setForm({
@@ -65,21 +52,20 @@ const ProfessionalCleaning = ({ user, lang }) => {
     e.preventDefault()
     setError("")
 
+    if (!form.customerName || !form.phone) {
+      setError(lang === "ar" ? "اكتب الاسم ورقم التلفون" : "Enter name and phone")
+      return
+    }
+
     if (!form.locationLink) {
       setError(lang === "ar" ? "حدد موقعك أول" : "Please select your location first")
       return
     }
 
     try {
-      const token = localStorage.getItem("token")
-
-      const res = await axios.post(`${API}/bookings`, form, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-
+      const res = await axios.post(`${API}/bookings`, form)
       setCreatedBooking(res.data)
+      window.scrollTo({ top: 0, behavior: "smooth" })
     } catch {
       setError(lang === "ar" ? "صار خطأ في حجز المعاينة" : "Inspection booking failed")
     }
@@ -98,11 +84,32 @@ Area: ${createdBooking.areaName}
 House Number: ${createdBooking.houseNumber}
 Location: ${createdBooking.locationLink}
 Date: ${createdBooking.date}
-Time: ${createdBooking.time}
 Notes: ${createdBooking.notes || "No notes"}
 `
 
     window.open(`https://wa.me/97366937709?text=${encodeURIComponent(msg)}`, "_blank")
+  }
+
+  if (createdBooking) {
+    return (
+      <section className="booking-success-page" dir={lang === "ar" ? "rtl" : "ltr"}>
+        <div className="receipt-card mega-success">
+          <div className="success-icon">✓</div>
+
+          <h2>{lang === "ar" ? "تم حجز المعاينة" : "Inspection Booked"}</h2>
+
+          <p>
+            {lang === "ar"
+              ? "تم حفظ طلبك، تواصل معنا في الواتساب لتأكيد المعاينة."
+              : "Your request is saved. Contact us on WhatsApp to confirm."}
+          </p>
+
+          <button className="whatsapp-big-btn" onClick={openWhatsapp}>
+            {lang === "ar" ? "تأكيد عبر الواتساب" : "Confirm on WhatsApp"}
+          </button>
+        </div>
+      </section>
+    )
   }
 
   return (
@@ -119,8 +126,8 @@ Notes: ${createdBooking.notes || "No notes"}
 
           <p>
             {lang === "ar"
-              ? "هذه الخدمة مخصصة للتنظيف العميق والمواد المتخصصة. نحجز معاينة أولًا ونحدد السعر حسب الحالة."
-              : "This service is for deep cleaning and specialized materials. We inspect first, then provide the final price."}
+              ? "بدون تسجيل دخول، احجز موعد معاينة ونرد عليك عبر الواتساب."
+              : "No login needed. Book an inspection and we will contact you on WhatsApp."}
           </p>
         </div>
 
@@ -134,6 +141,22 @@ Notes: ${createdBooking.notes || "No notes"}
           <h2>{lang === "ar" ? "حجز موعد معاينة" : "Book Inspection Appointment"}</h2>
 
           <form onSubmit={handleSubmit}>
+            <input
+              name="customerName"
+              value={form.customerName}
+              onChange={handleChange}
+              placeholder={lang === "ar" ? "اسم الزبون" : "Customer Name"}
+              required
+            />
+
+            <input
+              name="phone"
+              value={form.phone}
+              onChange={handleChange}
+              placeholder={lang === "ar" ? "رقم التلفون" : "Phone Number"}
+              required
+            />
+
             <button type="button" className="location-btn" onClick={getLocation}>
               {lang === "ar" ? "حدد موقعي من خرائط قوقل" : "Get Google Maps Location"}
             </button>
@@ -157,13 +180,9 @@ Notes: ${createdBooking.notes || "No notes"}
               value={form.houseNumber}
               onChange={handleChange}
               placeholder={lang === "ar" ? "رقم المنزل" : "House Number"}
-              required
             />
 
-            <div className="date-row">
-              <input name="date" type="date" value={form.date} onChange={handleChange} required />
-              <input name="time" type="time" value={form.time} onChange={handleChange} required />
-            </div>
+            <input name="date" type="date" value={form.date} onChange={handleChange} required />
 
             <textarea
               name="notes"
@@ -185,16 +204,6 @@ Notes: ${createdBooking.notes || "No notes"}
 
           {error && <p className="error-text">{error}</p>}
         </div>
-
-        {createdBooking && (
-          <div className="inspection-success">
-            <h2>{lang === "ar" ? "تم حجز المعاينة" : "Inspection Booked"}</h2>
-            <p>Booking ID: {createdBooking._id}</p>
-            <button onClick={openWhatsapp}>
-              {lang === "ar" ? "تواصل عبر الواتساب" : "Continue on WhatsApp"}
-            </button>
-          </div>
-        )}
       </section>
     </main>
   )

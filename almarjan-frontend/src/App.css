@@ -1383,3 +1383,337 @@ a {
     font-size: 35px;
   }
 }
+
+.nav-highlight {
+  background: rgba(215, 168, 79, 0.18) !important;
+  color: #f3d37a !important;
+  padding: 10px 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(243, 211, 122, 0.35);
+}
+
+.admin-login-link {
+  opacity: 0.7;
+  font-size: 14px !important;
+}
+
+.pricing-main-section {
+  padding: 70px 7%;
+  min-height: 80vh;
+  background:
+    radial-gradient(circle at top right, rgba(215, 168, 79, 0.18), transparent 35%),
+    linear-gradient(135deg, #f8fafc, #eef3f8);
+}
+
+.calculator-card {
+  max-width: 960px;
+  margin: auto;
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 34px;
+  padding: 38px;
+  box-shadow: 0 28px 80px rgba(10, 25, 47, 0.15);
+  border: 1px solid rgba(215, 168, 79, 0.22);
+  position: relative;
+  overflow: hidden;
+}
+
+.calculator-card::before {
+  content: "";
+  position: absolute;
+  width: 260px;
+  height: 260px;
+  background: rgba(215, 168, 79, 0.16);
+  border-radius: 50%;
+  top: -120px;
+  left: -120px;
+}
+
+.calculator-header {
+  position: relative;
+  z-index: 2;
+  margin-bottom: 28px;
+}
+
+.calculator-header span {
+  color: #d7a84f;
+  font-weight: 900;
+}
+
+.calculator-header h2 {
+  font-size: 42px;
+  margin: 10px 0;
+  color: #0a192f;
+}
+
+.calculator-header p {
+  color: #5b6475;
+  font-size: 18px;
+}
+
+.calculator-grid {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+}
+
+.calculator-grid input,
+.calculator-grid select,
+.booking-form-card input,
+.booking-form-card select,
+.booking-form-card textarea,
+.inspection-form-card input,
+.inspection-form-card textarea {
+  width: 100%;
+  padding: 16px 18px;
+  border-radius: 18px;
+  border: 1px solid #d7deea;
+  background: #f8fafc;
+  font-size: 16px;
+  outline: none;
+  transition: 0.25s ease;
+}
+
+.calculator-grid input:focus,
+.calculator-grid select:focus,
+.booking-form-card input:focus,
+.booking-form-card select:focus,
+.booking-form-card textarea:focus,
+.inspection-form-card input:focus,
+.inspection-form-card textarea:focus {
+  border-color: #d7a84f;
+  box-shadow: 0 0 0 4px rgba(215, 168, 79, 0.16);
+  background: white;
+}
+
+.check-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #f8fafc;
+  border: 1px solid #d7deea;
+  border-radius: 18px;
+  padding: 16px 18px;
+  font-weight: 800;
+  color: #0a192f;
+}
+
+.check-row input {
+  width: 18px !important;
+  height: 18px;
+}
+
+.big-price-box {
+  margin-top: 24px;
+  padding: 26px;
+  border-radius: 26px;
+  background: linear-gradient(135deg, #0a192f, #132b4f);
+  color: white;
+  text-align: center;
+  animation: popIn 0.45s ease;
+}
+
+.big-price-box p {
+  margin: 0;
+  color: #f3d37a;
+  font-weight: 800;
+}
+
+.big-price-box h3 {
+  font-size: 52px;
+  margin: 10px 0 22px;
+}
+
+.single-booking {
+  max-width: 760px;
+  margin: auto;
+  grid-template-columns: 1fr !important;
+}
+
+.booking-success-page {
+  min-height: 82vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 70px 7%;
+  background:
+    radial-gradient(circle at center, rgba(42, 157, 143, 0.18), transparent 35%),
+    linear-gradient(135deg, #f8fafc, #eef3f8);
+}
+
+.mega-success {
+  max-width: 650px;
+  text-align: center;
+  animation: popIn 0.45s ease;
+}
+
+.success-icon {
+  width: 88px;
+  height: 88px;
+  margin: 0 auto 20px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #22c55e, #86efac);
+  color: white;
+  display: grid;
+  place-items: center;
+  font-size: 48px;
+  font-weight: 900;
+  box-shadow: 0 18px 45px rgba(34, 197, 94, 0.35);
+}
+
+.success-details {
+  background: #f8fafc;
+  border-radius: 22px;
+  padding: 18px;
+  margin: 22px 0;
+  text-align: start;
+}
+
+.whatsapp-big-btn {
+  background: linear-gradient(135deg, #25d366, #128c7e);
+  color: white;
+  border: none;
+  padding: 16px 30px;
+  border-radius: 999px;
+  font-size: 18px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 14px 32px rgba(37, 211, 102, 0.35);
+  transition: 0.3s ease;
+}
+
+.whatsapp-big-btn:hover {
+  transform: translateY(-4px) scale(1.03);
+}
+
+.stat-card h3 {
+  font-size: 34px;
+}
+
+.profit-stat {
+  border-color: rgba(34, 197, 94, 0.35);
+  background: linear-gradient(180deg, #ffffff, #f0fdf4);
+}
+
+.danger-stat {
+  border-color: rgba(239, 68, 68, 0.28);
+  background: linear-gradient(180deg, #ffffff, #fff7f7);
+}
+
+.admin-price-form {
+  max-width: 900px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.admin-price-form button {
+  grid-column: 1 / -1;
+}
+
+.booking-admin-card {
+  border-top: 5px solid #d7a84f;
+}
+
+.before-after-grid {
+  display: grid;
+  gap: 34px;
+  max-width: 1100px;
+  margin: auto;
+}
+
+.before-after-card {
+  background: white;
+  border-radius: 30px;
+  padding: 22px;
+  box-shadow: 0 22px 65px rgba(10, 25, 47, 0.12);
+  border: 1px solid rgba(10, 25, 47, 0.06);
+  transition: 0.35s ease;
+}
+
+.before-after-card:hover {
+  transform: translateY(-8px);
+}
+
+.ba-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.ba-box {
+  position: relative;
+  overflow: hidden;
+  border-radius: 24px;
+  min-height: 280px;
+  background: #e5e7eb;
+}
+
+.ba-box img {
+  width: 100%;
+  height: 100%;
+  min-height: 280px;
+  object-fit: cover;
+  display: block;
+  transition: 0.5s ease;
+}
+
+.ba-box:hover img {
+  transform: scale(1.08);
+}
+
+.tag {
+  position: absolute;
+  top: 16px;
+  z-index: 3;
+  padding: 8px 16px;
+  border-radius: 999px;
+  color: white;
+  font-weight: 900;
+}
+
+.before {
+  background: #ef4444;
+  right: 16px;
+}
+
+.after {
+  background: #22c55e;
+  right: 16px;
+}
+
+.ba-title {
+  font-size: 24px;
+  font-weight: 900;
+  color: #0a192f;
+  text-align: center;
+  margin-bottom: 0;
+}
+
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92) translateY(15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@media (max-width: 800px) {
+  .calculator-grid,
+  .admin-price-form,
+  .ba-row {
+    grid-template-columns: 1fr;
+  }
+
+  .calculator-header h2 {
+    font-size: 30px;
+  }
+
+  .big-price-box h3 {
+    font-size: 38px;
+  }
+}
