@@ -8,9 +8,7 @@ const Pricing = ({ lang }) => {
   const [form, setForm] = useState({
     area: "",
     propertyType: "",
-    cleaningType: "Basic",
-    rooms: "",
-    tankCleaning: false
+    cleaningType: "Basic"
   })
 
   const [price, setPrice] = useState(null)
@@ -24,8 +22,13 @@ const Pricing = ({ lang }) => {
     try {
       const res = await axios.get(`${API}/prices/options`)
       setOptions(res.data)
-    } catch {
-      setOptions({ areas: [], propertyTypes: [] })
+    } catch (error) {
+      console.log(error)
+
+      setOptions({
+        areas: [],
+        propertyTypes: []
+      })
     }
   }
 
@@ -34,12 +37,13 @@ const Pricing = ({ lang }) => {
   }, [])
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target
-
     setForm({
       ...form,
-      [name]: type === "checkbox" ? checked : value
+      [e.target.name]: e.target.value
     })
+
+    setPrice(null)
+    setMessage("")
   }
 
   const checkPrice = async () => {
@@ -47,7 +51,12 @@ const Pricing = ({ lang }) => {
     setMessage("")
 
     if (!form.area || !form.propertyType) {
-      setMessage(lang === "ar" ? "اختار المنطقة ونوع المكان" : "Choose area and place type")
+      setMessage(
+        lang === "ar"
+          ? "اختار المنطقة ونوع المكان"
+          : "Choose area and place type"
+      )
+
       return
     }
 
@@ -56,81 +65,135 @@ const Pricing = ({ lang }) => {
         params: {
           area: form.area,
           propertyType: form.propertyType,
-          cleaningType: "Basic",
-          rooms: form.rooms || 0,
-          tankCleaning: form.tankCleaning
+          cleaningType: "Basic"
         }
       })
 
-      setPrice(res.data.finalPrice)
-    } catch {
-      setMessage(lang === "ar" ? "لا يوجد سعر لهذه الاختيارات" : "No price found for this choice")
+      console.log("PRICE RESPONSE:", res.data)
+
+      const final =
+        res.data.finalPrice !== undefined &&
+        res.data.finalPrice !== null
+          ? res.data.finalPrice
+          : res.data.price !== undefined &&
+            res.data.price !== null
+          ? res.data.price
+          : 0
+
+      setPrice(Number(final))
+    } catch (error) {
+      console.log(error)
+
+      setMessage(
+        lang === "ar"
+          ? "لا يوجد سعر لهذه الاختيارات"
+          : "No price found for this choice"
+      )
     }
   }
 
+  const displayPrice = () => {
+    if (price === null) return ""
+
+    return `${Number(price).toFixed(3)} BHD`
+  }
+
   return (
-    <section className="pricing-main-section" dir={lang === "ar" ? "rtl" : "ltr"}>
+    <section
+      className="pricing-main-section"
+      dir={lang === "ar" ? "rtl" : "ltr"}
+    >
       <div className="calculator-card">
         <div className="calculator-header">
-          <span>{lang === "ar" ? "حاسبة السعر الفورية" : "Instant Price Calculator"}</span>
-          <h2>{lang === "ar" ? "احسب سعر التنظيف قبل الحجز" : "Calculate before booking"}</h2>
+          <span>
+            {lang === "ar"
+              ? "حاسبة السعر"
+              : "Price Calculator"}
+          </span>
+
+          <h2>
+            {lang === "ar"
+              ? "التنظيف العادي"
+              : "Basic Cleaning"}
+          </h2>
+
           <p>
             {lang === "ar"
-              ? "اختر التفاصيل وشوف السعر مباشرة، وبعدها تقدر تحجز بدون حساب."
-              : "Choose the details, see the price, then book without an account."}
+              ? "اختر المنطقة ونوع المكان وشوف السعر مباشرة"
+              : "Choose area and place type to see the price instantly"}
           </p>
         </div>
 
         <div className="calculator-grid">
-          <select name="area" value={form.area} onChange={handleChange}>
-            <option value="">{lang === "ar" ? "اختر المنطقة" : "Choose Area"}</option>
-            {options.areas.map((item) => (
-              <option key={item} value={item}>{item}</option>
-            ))}
-          </select>
-
-          <select name="propertyType" value={form.propertyType} onChange={handleChange}>
-            <option value="">{lang === "ar" ? "اختر نوع المكان" : "Choose Place"}</option>
-            {options.propertyTypes.map((item) => (
-              <option key={item} value={item}>{item}</option>
-            ))}
-          </select>
-
-          <input
-            name="rooms"
-            type="number"
-            min="0"
-            value={form.rooms}
+          <select
+            name="area"
+            value={form.area}
             onChange={handleChange}
-            placeholder={lang === "ar" ? "عدد الغرف" : "Number of rooms"}
-          />
+          >
+            <option value="">
+              {lang === "ar"
+                ? "اختر المنطقة"
+                : "Choose Area"}
+            </option>
 
-          <label className="check-row">
-            <input
-              name="tankCleaning"
-              type="checkbox"
-              checked={form.tankCleaning}
-              onChange={handleChange}
-            />
-            <span>{lang === "ar" ? "إضافة تنظيف خزانات" : "Add tank cleaning"}</span>
-          </label>
+            {options.areas.map((item) => (
+              <option key={item} value={item}>
+                {item}
+              </option>
+            ))}
+          </select>
+
+          <select
+            name="propertyType"
+            value={form.propertyType}
+            onChange={handleChange}
+          >
+            <option value="">
+              {lang === "ar"
+                ? "اختر نوع المكان"
+                : "Choose Place"}
+            </option>
+
+            {options.propertyTypes.map((item) => (
+              <option key={item} value={item}>
+                {item}
+              </option>
+            ))}
+          </select>
         </div>
 
-        <button className="gold-btn" onClick={checkPrice}>
-          {lang === "ar" ? "عرض السعر" : "Check Price"}
+        <button
+          className="gold-btn calculator-btn"
+          onClick={checkPrice}
+        >
+          {lang === "ar"
+            ? "عرض السعر"
+            : "Check Price"}
         </button>
 
         {price !== null && (
           <div className="big-price-box">
-            <p>{lang === "ar" ? "السعر المتوقع" : "Estimated Price"}</p>
-            <h3>{price} BHD</h3>
+            <p>
+              {lang === "ar"
+                ? "السعر المتوقع"
+                : "Estimated Price"}
+            </p>
+
+            <h3>{displayPrice()}</h3>
+
             <Link to="/booking" className="main-btn">
-              {lang === "ar" ? "احجز بهذا السعر" : "Book with this price"}
+              {lang === "ar"
+                ? "احجز التنظيف العادي"
+                : "Book Basic Cleaning"}
             </Link>
           </div>
         )}
 
-        {message && <p className="error-text">{message}</p>}
+        {message && (
+          <p className="error-text">
+            {message}
+          </p>
+        )}
       </div>
     </section>
   )

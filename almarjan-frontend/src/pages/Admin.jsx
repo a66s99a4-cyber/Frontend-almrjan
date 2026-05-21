@@ -22,9 +22,19 @@ const Admin = ({ user }) => {
     propertyType: "",
     cleaningType: "Basic",
     price: "",
+    cost: ""
+  })
+
+  const [externalBooking, setExternalBooking] = useState({
+    customerName: "",
+    phone: "",
+    area: "",
+    propertyType: "",
+    cleaningType: "Basic",
+    date: "",
+    price: "",
     cost: "",
-    roomPrice: "",
-    tankCleaningPrice: ""
+    notes: ""
   })
 
   const token = localStorage.getItem("token")
@@ -124,9 +134,7 @@ const Admin = ({ user }) => {
         propertyType: "",
         cleaningType: "Basic",
         price: "",
-        cost: "",
-        roomPrice: "",
-        tankCleaningPrice: ""
+        cost: ""
       })
 
       refreshAdmin()
@@ -141,6 +149,52 @@ const Admin = ({ user }) => {
     })
 
     refreshAdmin()
+  }
+
+  const handleExternalBookingChange = (e) => {
+    setExternalBooking({
+      ...externalBooking,
+      [e.target.name]: e.target.value
+    })
+  }
+
+  const addExternalBooking = async (e) => {
+    e.preventDefault()
+
+    const price = Number(externalBooking.price || 0)
+    const cost = Number(externalBooking.cost || 0)
+
+    try {
+      await axios.post(
+        `${API}/bookings`,
+        {
+          ...externalBooking,
+          price,
+          cost,
+          profit: price - cost,
+          source: "external",
+          paymentStatus: "paid",
+          status: "completed"
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
+
+      setExternalBooking({
+        customerName: "",
+        phone: "",
+        area: "",
+        propertyType: "",
+        cleaningType: "Basic",
+        date: "",
+        price: "",
+        cost: "",
+        notes: ""
+      })
+
+      refreshAdmin()
+    } catch (error) {
+      alert(error.response?.data?.message || "Error adding external order")
+    }
   }
 
   useEffect(() => {
@@ -160,7 +214,12 @@ const Admin = ({ user }) => {
 
   return (
     <section className="section admin-page">
-      <h2>Admin Dashboard</h2>
+      <div className="admin-top">
+        <div>
+          <span>Al Marjan Cleaning Company</span>
+          <h2>Admin Dashboard</h2>
+        </div>
+      </div>
 
       <div className="admin-section">
         <h3>Website Statistics</h3>
@@ -199,69 +258,121 @@ const Admin = ({ user }) => {
         </div>
       </div>
 
-      <div className="admin-section">
-        <h3>Add Basic Price</h3>
+      <div className="admin-two-columns">
+        <div className="admin-section">
+          <h3>Add Basic Price</h3>
 
-        <form className="form-box admin-price-form" onSubmit={addPrice}>
-          <input
-            name="area"
-            placeholder="Area مثل Saar أو سار"
-            value={priceForm.area}
-            onChange={handlePriceChange}
-            required
-          />
+          <form className="form-box admin-price-form" onSubmit={addPrice}>
+            <input
+              name="area"
+              placeholder="Area مثل سار / الرفاع / المحرق"
+              value={priceForm.area}
+              onChange={handlePriceChange}
+              required
+            />
 
-          <select
-            name="propertyType"
-            value={priceForm.propertyType}
-            onChange={handlePriceChange}
-            required
-          >
-            <option value="">Choose Place</option>
-            <option value="Apartment">Apartment</option>
-            <option value="House">House</option>
-            <option value="Kitchen">Kitchen</option>
-            <option value="Office">Office</option>
-            <option value="Villa">Villa</option>
-          </select>
+            <input
+              name="propertyType"
+              placeholder="نوع المكان مثال: شقة / بيت / فيلا / مجلس"
+              value={priceForm.propertyType}
+              onChange={handlePriceChange}
+              required
+            />
 
-          <input name="cleaningType" value="Basic" readOnly />
+            <input name="cleaningType" value="Basic" readOnly />
 
-          <input
-            name="price"
-            type="number"
-            placeholder="Base Price BHD"
-            value={priceForm.price}
-            onChange={handlePriceChange}
-            required
-          />
+            <input
+              name="price"
+              type="number"
+              placeholder="السعر الذي يظهر للزبون BHD"
+              value={priceForm.price}
+              onChange={handlePriceChange}
+              required
+            />
 
-          <input
-            name="cost"
-            type="number"
-            placeholder="Company Cost BHD"
-            value={priceForm.cost}
-            onChange={handlePriceChange}
-          />
+            <input
+              name="cost"
+              type="number"
+              placeholder="تكلفة الشركة BHD"
+              value={priceForm.cost}
+              onChange={handlePriceChange}
+            />
 
-          <input
-            name="roomPrice"
-            type="number"
-            placeholder="Extra Price Per Room BHD"
-            value={priceForm.roomPrice}
-            onChange={handlePriceChange}
-          />
+            <button>Add Price</button>
+          </form>
+        </div>
 
-          <input
-            name="tankCleaningPrice"
-            type="number"
-            placeholder="Tank Cleaning Price BHD"
-            value={priceForm.tankCleaningPrice}
-            onChange={handlePriceChange}
-          />
+        <div className="admin-section">
+          <h3>Add External Order</h3>
 
-          <button>Add Price</button>
-        </form>
+          <form className="form-box admin-price-form" onSubmit={addExternalBooking}>
+            <input
+              name="customerName"
+              placeholder="Customer Name"
+              value={externalBooking.customerName}
+              onChange={handleExternalBookingChange}
+              required
+            />
+
+            <input
+              name="phone"
+              placeholder="Phone"
+              value={externalBooking.phone}
+              onChange={handleExternalBookingChange}
+              required
+            />
+
+            <input
+              name="area"
+              placeholder="Area"
+              value={externalBooking.area}
+              onChange={handleExternalBookingChange}
+            />
+
+            <input
+              name="propertyType"
+              placeholder="Place Type"
+              value={externalBooking.propertyType}
+              onChange={handleExternalBookingChange}
+            />
+
+            <input name="cleaningType" value="Basic" readOnly />
+
+            <input
+              name="date"
+              type="date"
+              value={externalBooking.date}
+              onChange={handleExternalBookingChange}
+              required
+            />
+
+            <input
+              name="price"
+              type="number"
+              placeholder="Income / Price BHD"
+              value={externalBooking.price}
+              onChange={handleExternalBookingChange}
+              required
+            />
+
+            <input
+              name="cost"
+              type="number"
+              placeholder="Company Cost BHD"
+              value={externalBooking.cost}
+              onChange={handleExternalBookingChange}
+            />
+
+            <textarea
+              name="notes"
+              placeholder="Notes"
+              value={externalBooking.notes}
+              onChange={handleExternalBookingChange}
+            />
+
+            <button>Add External Order</button>
+          </form>
+        </div>
       </div>
 
       <div className="admin-section">
@@ -273,14 +384,10 @@ const Admin = ({ user }) => {
               <h3>{item.area}</h3>
               <p>Place: {item.propertyType}</p>
               <p>Cleaning: {item.cleaningType}</p>
-              <p>Base Price: {item.price} BHD</p>
+              <p>Customer Price: {item.price} BHD</p>
               <p>Cost: {item.cost || 0} BHD</p>
-              <p>Room Price: {item.roomPrice || 0} BHD</p>
-              <p>Tank Cleaning: {item.tankCleaningPrice || 0} BHD</p>
 
-              <button onClick={() => deletePrice(item._id)}>
-                Delete Price
-              </button>
+              <button onClick={() => deletePrice(item._id)}>Delete Price</button>
             </div>
           ))}
         </div>
@@ -298,9 +405,8 @@ const Admin = ({ user }) => {
               <p>Area: {booking.areaName || booking.area}</p>
               <p>Place: {booking.propertyType}</p>
               <p>Cleaning: {booking.cleaningType}</p>
-              <p>Rooms: {booking.rooms || 0}</p>
-              <p>Tank Cleaning: {booking.tankCleaning ? "Yes" : "No"}</p>
               <p>House Number: {booking.houseNumber || "No house number"}</p>
+              <p>Source: {booking.source === "external" ? "External Order" : "Website"}</p>
 
               <p>
                 Location:{" "}
@@ -322,13 +428,9 @@ const Admin = ({ user }) => {
               <p>Notes: {booking.notes || "No notes"}</p>
 
               {booking.paymentStatus === "paid" ? (
-                <button onClick={() => markAsPending(booking._id)}>
-                  Mark as Pending
-                </button>
+                <button onClick={() => markAsPending(booking._id)}>Mark as Pending</button>
               ) : (
-                <button onClick={() => markAsPaid(booking._id)}>
-                  Confirm Paid
-                </button>
+                <button onClick={() => markAsPaid(booking._id)}>Confirm Paid</button>
               )}
 
               <select
@@ -341,9 +443,7 @@ const Admin = ({ user }) => {
                 <option value="cancelled">Cancelled</option>
               </select>
 
-              <button onClick={() => deleteBooking(booking._id)}>
-                Delete Booking
-              </button>
+              <button onClick={() => deleteBooking(booking._id)}>Delete Booking</button>
             </div>
           ))}
         </div>
